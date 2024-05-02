@@ -3,20 +3,23 @@
 # Periksa apakah skrip dijalankan sebagai pengguna root 
 if [ "$(id -u)" != "0" ]; then
     echo "Skrip ini harus dijalankan dengan izin pengguna root."
-    echo "Silakan coba gunakan perintah 'Gunakan sudo -i' untuk beralih ke pengguna root, lalu jalankan skrip ini lagi."
+    echo "Silakan coba gunakan perintah 'sudo -i' untuk beralih ke pengguna root, lalu jalankan skrip ini lagi."
     exit 1
 fi
 
 echo "=======================Titan Node=======================" 
 
-# Muat Informasi kode identitas 
-id="A5255DBE-786C-4418-A469-1986EFFA9DD4"
+# Meminta input ID dari pengguna
+read -p "Masukkan ID: " id
 
-# Jumlah container yang ingin dibuat 
-container_count=5
+# Meminta input jumlah container dari pengguna
+read -p "Masukkan jumlah container yang ingin dibuat: " container_count
 
-# Batas ukuran hard disk setiap node (dalam GB) 
-disk_size_gb=50
+# Meminta input ukuran disk dalam GB dari pengguna
+read -p "Masukkan ukuran disk dalam GB: " disk_size_gb
+
+# Spesifikasi minimal perangkat
+min_spec="1 CPU, 2GB RAM, 50GB disk"
 
 # Directory penyimpanan volume data pengguna
 volume_dir="/mnt/docker_volumes"
@@ -62,7 +65,7 @@ do
     # Jalankan container dan setel kebijakan mulai ulang ke selalu 
     container_id=$(docker run -d --restart always -v $mount_point:/root/.titanedge/storage --name "titan$i" nezha123/titan-edge)
 
-    echo "node titan$i telah memulai ID containe $container_id"
+    echo "Node titan$i telah memulai dengan ID container $container_id dan spesifikasi minimal: $min_spec"
 
     sleep 30
     
